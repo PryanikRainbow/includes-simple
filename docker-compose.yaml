@@ -1,0 +1,32 @@
+version: "3"
+services:
+     
+    nginx:
+      image: nginx:latest
+      container_name: nginx-price-tracker
+      ports:
+       - 80:80
+      volumes:
+       - './src:/var/www/html'
+       - './docker/nginx/conf.d:/etc/nginx/conf.d'
+      env_file:
+       - .env
+
+    php:
+      build:
+        context: ./docker/php
+      volumes:
+      - './src:/var/www/html'
+      container_name: php-price-tracker
+      env_file:
+       - .env
+
+    mysql:
+      image: mysql:8.1.0
+      environment:
+       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      volumes:
+       - './docker/volume/mysql:/var/lib/mysql'
+      container_name: mysql-price-tracker
+      env_file:
+       - .env
